@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
@@ -135,6 +136,7 @@ class MainActivity : AppCompatActivity() {
         val containerH = container.height
         var starW: Float = star.width.toFloat()
         var starH: Float = star.height.toFloat()
+//        Log.v("CHECKU","W1="+starW.toString() + " , H1="+starH.toString())
 
         // Adding a new Star in Framelayout
         val newStar = AppCompatImageView(this)
@@ -145,28 +147,30 @@ class MainActivity : AppCompatActivity() {
         container.addView(newStar)
 
         // Resizing a new Star
-        newStar.scaleX = Math.random().toFloat() * 1.5f + .1f
+        newStar.scaleX = Math.random().toFloat() * 1.7f + .1f
         newStar.scaleY = newStar.scaleX
-        starW *= newStar.scaleX // cache a new star width
-        starH *= newStar.scaleY // cache a new star width
+        starW *= newStar.scaleX // cache a new star width , so they reflect size in PIXELS
+        starH *= newStar.scaleY // cache a new star Height , so they reflect size in PIXELS
+//        Log.v("CHECKU","W2="+starW.toString() + " , H2="+starH.toString())
 
-        // For getting from TOP on any place
+        // For getting from TOP on any place either LEFT,CENTER,RIGHT
         newStar.translationX = Math.random().toFloat() *
                 containerW - starW / 2
 
-        // Vertically Move from
+        // Vertically Move from Top to Bottom
         val mover = ObjectAnimator.ofFloat(newStar, View.TRANSLATION_Y,
             -starH, containerH + starH)
-        mover.interpolator = AccelerateInterpolator(1f)
+        mover.interpolator = AccelerateInterpolator(1f) // For Accelerating Speed while moving
+
         // Rotation while Moving
         val rotator = ObjectAnimator.ofFloat(newStar, View.ROTATION,
-            (Math.random() * 1080).toFloat())
-        rotator.interpolator = LinearInterpolator()
+            (Math.random() * 3 * 360 ).toFloat())
+        rotator.interpolator = LinearInterpolator() // Linear Constant Speed
 
         // Run BOTH animation at same time
         val set = AnimatorSet()
         set.playTogether(mover, rotator)
-        set.duration = (Math.random() * 1500 + 700).toLong()
+        set.duration = (Math.random() * 3000 + 1000).toLong()
         set.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
                 container.removeView(newStar)
